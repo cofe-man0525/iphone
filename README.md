@@ -29,7 +29,7 @@ Java服务实现 `/api` 全部业务接口、Bearer鉴权、真实音频校验�
 - 原声约7.882秒，M4A约7.895秒、WAV约7.872秒。辅助本地ASR识别出相同中文内容，简繁与标点有所差异。这不替代人类音质评价。
 - 24项开发者布局检查通过。网页预览只用于布局检查，不是H5/PWA成品。
 
-**尚未完成iPhone真机、微信/抖音接收及签名IPA安装验证。** 已关联原有 Expo 云端项目；GitHub macOS 真机编译及 Sideloadly 重签仍待实际验证，不声称已得到可安装IPA。原有应用测试证据及范围见 [测试记录](docs/测试记录.md)，新增编译流程见下方安装指南。
+**GitHub macOS 真机 Release 未签名 IPA 已构建成功，并在 Windows 下载复核。** [Actions #2](https://github.com/cofe-man0525/iphone/actions/runs/42486951928) 使用 Xcode 26.6 / iphoneos SDK 26.5，验证了 ARM64 真机平台、9 个原生二进制和 JS Bundle。Sideloadly 重签、iPhone 实际安装及微信/抖音接收仍待设备验证。原有应用测试证据见 [测试记录](docs/测试记录.md)，实际编译及产物信息见 [验证记录](docs/ios-build-validation.md)。
 
 ## Windows 启动
 
@@ -51,7 +51,7 @@ AI默认 `127.0.0.1:8090`，业务默认 `127.0.0.1:8089`。首次在其他机�
 
 ## iPhone 构建与安装
 
-**Windows + 免费 Apple ID：** 现在可使用根目录 `.github/workflows/ios-build.yml`，手动运行 GitHub Actions **iOS Unsigned IPA (Sideloadly)**，下载未签名真机 IPA 后在 Windows 用 Sideloadly 重签并 USB 安装。无需额外 GitHub Secrets。现有仓库直接在项目根目录提交；另行导出移动端时可用 `python scripts/prepare-github-upload.py`。完整步骤和费用条件见 [GitHub Actions / Sideloadly 安装指南](docs/ios-install.md)，本机检查范围见 [验证记录](docs/ios-build-validation.md)。此流程尚待 GitHub macOS 实际编译和 iPhone 安装验证。
+**Windows + 免费 Apple ID：** 使用根目录 `.github/workflows/ios-build.yml`，手动运行 GitHub Actions **iOS Unsigned IPA (Sideloadly)**，下载未签名真机 IPA 后在 Windows 用 Sideloadly 重签并 USB 安装。无需额外 GitHub Secrets。现有仓库直接在项目根目录提交；另行导出移动端时可用 `python scripts/prepare-github-upload.py`。完整步骤和费用条件见 [GitHub Actions / Sideloadly 安装指南](docs/ios-install.md)，实际结果见 [验证记录](docs/ios-build-validation.md)。云端构建已通过，iPhone 安装仍待本人操作验证。
 
 以下保留原有 EAS 签名构建路线：
 

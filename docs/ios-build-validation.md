@@ -10,7 +10,7 @@
 | --- | --- |
 | 项目结构 | 根目录非 Git 仓库，mobile 内有原有 `.git`；新增上传副本脚本，不删除该历史 |
 | 原生目录 | 当前 `mobile/ios` 不存在，未在 Windows 创建、删除或覆盖原生目录 |
-| npm 锁文件 | `package-lock.json` 为 v3；598 个 resolved 地址改为 npm 官方源，版本、integrity 及依赖关系不变。原锁文件及更新后锁文件分别在隔离目录执行 `npm ci --dry-run --ignore-scripts --no-audit --no-fund`，均退出 0，解析 598 项。未真正重新安装 node_modules；macOS 上真正的 npm ci 待云端执行 |
+| npm 锁文件 | `package-lock.json` 为 v3；598 个 resolved 地址改为 npm 官方源，版本、integrity 及依赖关系不变。原锁文件及更新后锁文件分别在 Windows 隔离目录执行 npm ci dry-run，均退出 0；随后在 GitHub macOS 真正执行 npm ci，成功 |
 | Expo 最终配置 | `expo config --type public --json` 和 `--type introspect --json` 均退出 0 |
 | 项目身份 | Owner `shandexindevelopapp`、slug `ai-voice-changer`、ID `cd4cfc12-db9c-4f1f-99b1-746f5c958901`、Bundle ID `dev.personal.aivoice` 均正确 |
 | 权限与能力 | 原有麦克风说明和 expo-audio 插件保留；配置及生成的 iOS entitlements 都为 `{}` |
@@ -33,7 +33,7 @@ IPA 规则测试使用的全部是临时合成测试数据，命名为 fixture/z
 - 核心：Expo `~58.0.23`、React Native `0.88.1`、React `19.3.0`。
 - Expo 原生模块：audio `~58.0.11`、asset `~58.0.20`、constants `~58.0.15`、document-picker `~58.0.4`、file-system `~58.0.13`、linking `~58.0.16`、secure-store `~58.0.2`、sharing `~58.0.22`、router `~58.0.30`、status-bar `~58.0.4`。
 - 其他原生依赖：slider `5.2.1`、safe-area-context `~5.11.1`、screens `~4.30.1`、svg `15.16.0`。
-- 没有新增原生库，也没有升级依赖；仅统一锁文件下载源。Expo SDK 58 官方 Xcode 下限为 26.4，选择 runner 中提供的 Xcode 26.6；最终原生兼容性仍以云端编译结果为准。
+- 没有新增原生库，也没有升级依赖；仅统一锁文件下载源。Expo SDK 58 官方 Xcode 下限为 26.4；本次选择 Xcode 26.6，并已通过真实云端 Release 编译。
 
 ### 已存在的 ESLint 问题
 
@@ -47,18 +47,27 @@ IPA 规则测试使用的全部是临时合成测试数据，命名为 fixture/z
 
 本机证据保存在忽略提交的 `.runtime/ios-ci/`，包括修改前配置哈希、public/introspect 配置、npm dry-run 日志、lint 日志和 JS 导出日志。上传副本脚本将生成逐文件 SHA-256 清单，便于发布前复核。
 
-## 待云端及设备验证
+## 真实云端编译结果
 
-完整源码已推送到现有 `cofe-man0525/iphone` 的 `main`，保留原始 README 提交。首次真实运行 [Actions #1](https://github.com/cofe-man0525/iphone/actions/runs/42486697033) 中，Xcode / iphoneos SDK 检查、真正的 macOS `npm ci`、TypeScript、6 项逻辑测试、12 项 IPA 规则测试均通过。Prebuild 因 `--no-install` 与 `--npm` 参数互斥失败；已移除多余 `--npm`，继续云端验证，没有生成或上传假 IPA。
+完整源码已推送到现有 `cofe-man0525/iphone` 的 `main`，保留原始 README 提交。首次真实运行 [Actions #1](https://github.com/cofe-man0525/iphone/actions/runs/42486697033) 中，Xcode / iphoneos SDK 检查、真正的 macOS `npm ci`、TypeScript、6 项逻辑测试、12 项 IPA 规则测试均通过。Prebuild 因 `--no-install` 与 `--npm` 参数互斥失败；随后移除多余 `--npm` 并正常提交推送，没有生成或上传假 IPA。
 
-以下项目仍**待验证**：
+第二次 [Actions #2](https://github.com/cofe-man0525/iphone/actions/runs/42486951928) **真实构建成功**：
 
-1. 在标准 macos-26 runner 真正执行 npm ci、Expo iOS Prebuild 和 CocoaPods。
-2. Xcode 26.6 真机 Release archive、生成的 .app 可执行文件及嵌入框架。
-3. 在真实产物上运行平台 / JS Bundle / entitlements 检查，打包并上传未签名 IPA。
-4. Windows 下载真实 IPA，在 Sideloadly 用用户本人免费 Apple ID 重签并安装。
-5. iPhone 录音、重启恢复、连接 HTTPS 服务器、转换、导出及微信 / 抖音实际接收。
+- 源码提交：`3e30a571b6bce4cb3cf07af77f3bf164e871010f`。
+- 标准 `macos-26` runner；Xcode `26.6`，Build `17F113`，iphoneos SDK `26.5`。
+- npm ci、Prebuild、CocoaPods、真机 Release archive、产物验证及 Artifact 上传全部通过。
+- Bundle ID：`dev.personal.aivoice`；最低 iOS：`16.4`；平台：`iPhoneOS` / ARM64。
+- 9 个原生二进制通过 iOS 平台及无签名检查；`main.jsbundle` 为 2,842,380 字节。
+- IPA：`AI-Voice-Changer-unsigned-iphoneos.ipa`，10,109,268 字节。
+- SHA-256：`1fd1e3154b3105b6b1990935c462a7d4d670ed91cd62c8462ca8a27857485411`。
+- Artifact：`AI-Voice-Changer-unsigned-iphoneos-2`，GitHub 保留到 `2026-11-11 14:08:54 UTC`。
+- 已下载到本机 `deliverables/ios/`。在 Windows 再次核对 ZIP 完整性、Payload 结构、Info.plist、9 个实际 Mach-O 二进制、JS Bundle 和 SHA-256，全部通过。本机文件不因 Artifact 链接到期而删除。
 
-没有 Apple 登录、没有创建新的 Expo 项目、没有提交任何 Apple ID、Token、密码、私钥、模型或录音。CI 配置成功和静态测试成功不等于已成功原生构建或真机安装。
+## 仍待本人设备验证
+
+1. 用 Windows Sideloadly 和本人免费 Apple ID 重签并安装；未签名 IPA 不能直接作为已签名 App 安装。
+2. iPhone 录音、重启恢复、连接 HTTPS 服务器、实际转换、导出及微信 / 抖音接收。
+
+本次没有 Apple 登录，没有创建新的 Expo 项目，没有提交 Apple ID、Token、密码、私钥、模型或录音。GitHub 授权由本机 Git Credential Manager 处理，未写入源码。本次已完成真实原生构建和 IPA 内容验证，尚未进行 iPhone 安装或设备音质验证。
 
 安装步骤见 [ios-install.md](ios-install.md)。

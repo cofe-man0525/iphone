@@ -41,3 +41,5 @@ git push origin main
 不需要额外 GitHub Secrets 或付费 Apple 开发者会员来执行未签名构建。公开仓库标准 runner 的计算与私有仓库额度、Artifact 存储的区别，及免费 Apple ID 的刷新要求，见 [完整安装指南](ios-install.md)。
 
 工作流只手动触发，推送源码不会自动启动 macOS 编译。**仓库上传、静态检查通过不等于云端编译成功；以 GitHub Actions 真实日志及下载产物为准。**
+
+本次已手动触发验证：[Actions #2 构建成功](https://github.com/cofe-man0525/iphone/actions/runs/42486951928)。已下载的真实未签名 IPA 位于本机 `deliverables/ios/AI-Voice-Changer-unsigned-iphoneos.ipa`，SHA-256 与云端报告相同；签名和设备安装尚未执行。具体环境、产物大小及校验值见 [验证记录](ios-build-validation.md)。

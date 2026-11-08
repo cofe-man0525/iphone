@@ -196,9 +196,9 @@ CI 会再次检查生成的 `.entitlements` 文件。除由重签工具处理的
 
 ## 9. 本机验证与云端待验证范围
 
-详见同目录 `ios-build-validation.md` 的实际记录。Windows 可以检查锁文件、Expo 配置、依赖、TypeScript、逻辑测试、YAML、IPA 校验规则和源码上传副本。macOS CocoaPods、Xcode 编译、实际 `.app` 检查和 Sideloadly 真机安装都需分别在 GitHub / 本人电脑及手机验证。
+详见同目录 `ios-build-validation.md` 的实际记录。Windows 已检查锁文件、Expo 配置、依赖、TypeScript、逻辑测试、YAML、IPA 校验规则和源码上传范围。随后 [Actions #2](https://github.com/cofe-man0525/iphone/actions/runs/42486951928) 成功完成 macOS CocoaPods、Xcode 真机 Release 编译、真实 `.app` 检查和未签名 IPA 打包；产物已下载到本机 `deliverables/ios/` 并复核。
 
-**当前仅完成流程配置及本机检查，没有声称 GitHub 已编译成功，也没有生成任何冒充真机编译的 IPA。**
+**当前已得到真实 iphoneos / ARM64 未签名 IPA；Sideloadly 重签与 iPhone 实际安装仍待本人执行。** 没有使用 Simulator 产物冒充真机 IPA。
 
 ## 10. 常见错误
 
