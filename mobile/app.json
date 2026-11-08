@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "owner": "shandexindevelopapp",
+    "slug": "ai-voice-changer",
+    "icon": "./assets/icon.png",
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "cd4cfc12-db9c-4f1f-99b1-746f5c958901"
+      }
+    }
+  }
+}

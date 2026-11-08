@@ -1,0 +1,13 @@
+# Audited V1 subset. Upstream's mixed nightly/stable torch lines are not installed together.
+numpy==1.26.4
+scipy==1.13.1
+librosa==0.10.2
+transformers==4.46.3
+huggingface-hub==0.36.0
+munch==4.0.0
+einops==0.8.0
+soundfile==0.12.1
+pyyaml==6.0.2
+pydub==0.25.1
+hydra-core==1.3.2
+descript-audio-codec==1.0.0

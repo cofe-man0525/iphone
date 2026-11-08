@@ -1,0 +1,87 @@
+name: iOS Unsigned IPA (Sideloadly)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-unsigned-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-ios:
+    # Standard GitHub-hosted runner; do not select a billed large/xlarge runner.
+    runs-on: macos-26
+    timeout-minutes: 90
+    env:
+      CI: "1"
+      EXPO_NO_TELEMETRY: "1"
+      EXPO_NO_DOTENV: "1"
+      AIVOICE_ALLOW_LOCAL_HTTP: "0"
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout project root
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22.20.0"
+          package-manager-cache: false
+
+      - name: Check Xcode and device SDK
+        run: |
+          test -d "$DEVELOPER_DIR"
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          node --version
+          npm --version
+          pod --version
+          python3 --version
+
+      - name: Install locked mobile dependencies
+        working-directory: mobile
+        run: npm ci --no-audit --no-fund
+
+      - name: Check TypeScript and mobile logic
+        working-directory: mobile
+        run: |
+          npm run typecheck
+          npm test
+          npx --no-install expo install --check
+
+      - name: Test IPA validation safeguards
+        run: python3 -m unittest discover -s scripts/ios -p 'test_*.py' -v
+
+      - name: Prebuild, install Pods, archive iphoneos and package unsigned IPA
+        run: python3 scripts/ios/build_unsigned.py
+
+      - name: Upload unsigned IPA and validation report
+        uses: actions/upload-artifact@v7
+        with:
+          name: AI-Voice-Changer-unsigned-iphoneos-${{ github.run_number }}
+          path: |
+            .runtime/ios-ci/artifacts/*.ipa
+            .runtime/ios-ci/artifacts/validation.json
+            .runtime/ios-ci/artifacts/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
+          include-hidden-files: true
+
+      - name: Upload build diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ios-build-diagnostics-${{ github.run_number }}
+          path: .runtime/ios-ci/logs/*.log
+          if-no-files-found: ignore
+          retention-days: 3
+          include-hidden-files: true

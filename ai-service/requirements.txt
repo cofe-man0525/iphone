@@ -1,0 +1,5 @@
+fastapi==0.136.1
+uvicorn==0.47.0
+python-multipart==0.0.32
+httpx==0.28.1
+imageio-ffmpeg==0.6.0

@@ -1,0 +1,24 @@
+server:
+  port: ${PORT:8089}
+  address: ${BIND_ADDRESS:127.0.0.1}
+  error:
+    include-message: never
+spring:
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 22MB
+      location: ${AIVOICE_TMP:./data/tmp}
+  jackson:
+    default-property-inclusion: non_null
+aivoice:
+  data-dir: ${AIVOICE_DATA:./data}
+  api-token: ${AIVOICE_API_TOKEN:}
+  ai-url: ${AIVOICE_AI_URL:http://127.0.0.1:8090}
+  ai-token: ${AIVOICE_AI_TOKEN:}
+  timeout-seconds: ${AIVOICE_TIMEOUT:900}
+  retention-days: ${AIVOICE_RETENTION_DAYS:30}
+logging:
+  level:
+    root: INFO
+    org.springframework.web: WARN

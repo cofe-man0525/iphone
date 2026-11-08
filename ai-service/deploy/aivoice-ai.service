@@ -1,0 +1,18 @@
+[Unit]
+Description=AI Voice Changer private Seed-VC service
+After=network-online.target
+
+[Service]
+User=aivoice
+WorkingDirectory=/opt/aivoice/ai-service
+EnvironmentFile=/opt/aivoice/server.env
+ExecStart=/opt/aivoice/ai-service/.venv/bin/python -m uvicorn main:app --host 127.0.0.1 --port 8090 --workers 1
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=30
+NoNewPrivileges=true
+PrivateTmp=true
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
