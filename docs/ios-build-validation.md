@@ -49,7 +49,9 @@ IPA 规则测试使用的全部是临时合成测试数据，命名为 fixture/z
 
 ## 待云端及设备验证
 
-尚未上传或触发 GitHub Actions，因此以下项目**待验证**：
+完整源码已推送到现有 `cofe-man0525/iphone` 的 `main`，保留原始 README 提交。首次真实运行 [Actions #1](https://github.com/cofe-man0525/iphone/actions/runs/42486697033) 中，Xcode / iphoneos SDK 检查、真正的 macOS `npm ci`、TypeScript、6 项逻辑测试、12 项 IPA 规则测试均通过。Prebuild 因 `--no-install` 与 `--npm` 参数互斥失败；已移除多余 `--npm`，继续云端验证，没有生成或上传假 IPA。
+
+以下项目仍**待验证**：
 
 1. 在标准 macos-26 runner 真正执行 npm ci、Expo iOS Prebuild 和 CocoaPods。
 2. Xcode 26.6 真机 Release archive、生成的 .app 可执行文件及嵌入框架。

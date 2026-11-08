@@ -93,7 +93,7 @@ def main() -> None:
         print("Existing native iOS directory detected: preserving it, skipping Expo Prebuild.")
     else:
         # No --clean; never overwrite hand-maintained native changes.
-        run(["npx", "--no-install", "expo", "prebuild", "--platform", "ios", "--no-install", "--npm"])
+        run(["npx", "--no-install", "expo", "prebuild", "--platform", "ios", "--no-install"])
     entitlement_report = {}
     for path in ios.rglob("*.entitlements"):
         if "Pods" in path.relative_to(ios).parts or "build" in path.relative_to(ios).parts:

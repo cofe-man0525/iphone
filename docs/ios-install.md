@@ -124,7 +124,7 @@ git push -u origin main
 2. 在 `mobile` 执行真正的 `npm ci`，严格使用已提交锁文件。
 3. TypeScript、移动端逻辑测试和 Expo 依赖兼容性检查。
 4. 检查最终 Expo 配置，保留现有项目身份及 Bundle ID。
-5. 当前没有 `ios/`，执行 `expo prebuild --platform ios --no-install --npm`；不使用 `--clean`。将来若已提交手工维护的 `ios/`，先验证 Podfile / Xcode 工程存在，**跳过 Prebuild**，不会覆盖原生修改。
+5. 当前没有 `ios/`，执行 `expo prebuild --platform ios --no-install`；不使用 `--clean`。Expo CLI 的 `--no-install` 与 `--npm` 互斥，不同时传入；依赖安装已由前面的 `npm ci` 完成。将来若已提交手工维护的 `ios/`，先验证 Podfile / Xcode 工程存在，**跳过 Prebuild**，不会覆盖原生修改。
 6. `pod install`；已有 Podfile.lock 时加 `--deployment`，不悄悄升级原生依赖。
 7. 从 shared schemes 及 Release build settings 找到 Bundle ID 匹配的实际应用方案。
 8. `xcodebuild archive -configuration Release -sdk iphoneos -destination 'generic/platform=iOS'`，同时关闭 `CODE_SIGNING_ALLOWED`、`CODE_SIGNING_REQUIRED`，清空签名身份和 Team。
